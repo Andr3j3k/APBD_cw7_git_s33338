@@ -53,25 +53,25 @@ public class AppointmentsRepository(IConfiguration configuration) : IAppointment
     public async Task<AppointmentDetailsDto?> GetByIdAsync(int idAppointment)
     {
         const string sql = """
-            SELECT
-                a.IdAppointment,
-                a.AppointmentDate,
-                a.Status,
-                a.Reason,
-                a.InternalNotes,
-                a.CreatedAt,
-                p.FirstName + ' ' + p.LastName AS PatientFullName,
-                p.Email AS PatientEmail,
-                p.PhoneNumber,
-                d.FirstName + ' ' + d.LastName AS DoctorFullName,
-                d.LicenseNumber,
-                s.Name AS SpecializationName
-            FROM Appointments a
-            JOIN Patients p ON p.IdPatient = a.IdPatient
-            JOIN Doctors d ON d.IdDoctor = a.IdDoctor
-            JOIN Specializations s ON s.IdSpecialization = d.IdSpecialization
-            WHERE a.IdAppointment = @IdAppointment;
-            """;
+                           SELECT
+                               a.IdAppointment,
+                               a.AppointmentDate,
+                               a.Status,
+                               a.Reason,
+                               a.InternalNotes,
+                               a.CreatedAt,
+                               p.FirstName + ' ' + p.LastName AS PatientFullName,
+                               p.Email AS PatientEmail,
+                               p.PhoneNumber AS PatientPhoneNumber,
+                               d.FirstName + ' ' + d.LastName AS DoctorFullName,
+                               d.LicenseNumber AS DoctorLicenseNumber,
+                               s.Name AS SpecializationName
+                           FROM Appointments a
+                           JOIN Patients p ON p.IdPatient = a.IdPatient
+                           JOIN Doctors d ON d.IdDoctor = a.IdDoctor
+                           JOIN Specializations s ON s.IdSpecialization = d.IdSpecialization
+                           WHERE a.IdAppointment = @IdAppointment;
+                           """;
 
         await using var connection = new SqlConnection(_connectionString);
         await using var command = new SqlCommand(sql, connection);
